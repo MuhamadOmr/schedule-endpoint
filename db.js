@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect('mongodb://localhost:27018/schedule');
+mongoose.connect('mongodb://localhost:27017/schedule');
 
-module.exports = {mongoose};
+module.exports = {mongoose: mongoose};
 

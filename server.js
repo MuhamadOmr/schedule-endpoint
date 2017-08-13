@@ -1,5 +1,7 @@
 var restify = require('restify'),
-    jobs = require('./api/jobs');
+    jobs = require('./api/jobs'),
+    connection = require("./db");
+
 
 
 
@@ -9,7 +11,7 @@ var server = restify.createServer();
 server.use(restify.plugins.bodyParser());
 
 
-server.get('/', jobs.createSchedule);
+server.post('schedule', jobs.createSchedule);
 
 
 
