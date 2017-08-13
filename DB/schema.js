@@ -18,7 +18,8 @@ scheduleSchema = new mongoose.Schema({
   },
 
   name:{
-    type: String
+    type: String,
+    unique: true
   },
 
   schedule: {
@@ -31,8 +32,12 @@ scheduleSchema = new mongoose.Schema({
     msg: {
       type: String,
     }
-  }
+  },
 
+  sent:{
+    type: Boolean,
+    default: false
+  }
 
 });
 

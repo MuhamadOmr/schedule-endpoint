@@ -24,6 +24,8 @@ jobs = function(){
 
       res.send(result);
       next();
+    }).catch((e)=>{
+      res.send(e);
     })
 
   }
