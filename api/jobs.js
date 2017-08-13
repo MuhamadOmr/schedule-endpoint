@@ -19,7 +19,6 @@ jobs = function(){
       pushData: {msg: pushData.msg}
     });
 
-    // save in the database
     oneSchedule.save().then((result)=>{
 
       res.send(result);
@@ -30,11 +29,80 @@ jobs = function(){
 
   }
 
+  function listAllSchedules(req , res ,next){
 
+    Schedule.find({}).then((results)=>{
+
+      res.send(results);
+      next();
+    }).catch((e)=>{
+      res.send(e);
+    })
+
+  }
+
+  function listScheduleById(req , res ,next){
+
+    var id = req.params.id;
+
+    Schedule.findById(id).then((result)=>{
+
+      res.send(result);
+      next();
+    }).catch((e)=>{
+      res.send(e);
+    })
+
+  }
+
+  function deleteSchedule(req , res ,next){
+
+    var id = req.params.id;
+
+    // save in the database
+    Schedule.remove({_id: id}).then((results)=>{
+
+      res.send(results);
+      next();
+    }).catch((e)=>{
+      res.send(e);
+    })
+
+  }
+
+  function updateScheduleById(req , res ,next){
+
+    var id = req.params.id,
+        data = req.body;
+
+    // update the db then check for the sent property
+    // if changed to TRUE
+      // if True -- delete the record
+    Schedule.findByIdAndUpdate(id, data,{new: true})
+    .then((record)=>{
+
+      if(record.sent){
+        deleteSchedule(req , res);
+      }
+      else{
+        res.send(record);
+        next();
+      }
+
+    })
+    .catch((e)=>{
+      res.send(e);
+    })
+
+  }
 
 
   return {
     createSchedule: createSchedule,
+    listAllSchedules: listAllSchedules,
+    deleteSchedule: deleteSchedule,
+    updateScheduleById: updateScheduleById,
+    listScheduleById: listScheduleById
 
   }
 };

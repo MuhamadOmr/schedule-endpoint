@@ -13,6 +13,13 @@ server.use(restify.plugins.bodyParser());
 
 server.post('schedule', jobs.createSchedule);
 
+server.get('schedule', jobs.listAllSchedules);
+
+server.get('schedule/:id', jobs.listScheduleById);
+
+server.del('schedule/:id', jobs.deleteSchedule);
+
+server.patch('schedule/:id', jobs.updateScheduleById);
 
 
 server.listen(8088, function() {
