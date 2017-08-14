@@ -9,8 +9,7 @@ jobs = function(){
     // check for request body type
     if(!req.is('application/json') ){
 
-      var err = new Error('please send json type request');
-      return res.send(400, err.message);
+      return res.send(400, "please send json type request");
     }
 
   }
@@ -178,7 +177,8 @@ jobs = function(){
     listAllSchedules: listAllSchedules,
     deleteSchedule: deleteSchedule,
     updateScheduleById: updateScheduleById,
-    listScheduleById: listScheduleById
+    listScheduleById: listScheduleById,
+    checkIfJson: checkIfJson,
 
   }
 };
