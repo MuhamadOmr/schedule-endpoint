@@ -10,28 +10,35 @@ var mongoose = require('mongoose');
 // });
 
 // Schedule Schema
+
+
 scheduleSchema = new mongoose.Schema({
 
   app_id:{
-    type: String
+    type: String,
+    required: true
 
   },
 
   name:{
     type: String,
-    unique: true
+    required: true
+
   },
 
   schedule: {
     time:{
       type: Date,
+      required: true
+
     }
   },
 
   pushData: {
     msg: {
-      type: String,
-    }
+      type: String
+
+  }
   },
 
   sent:{
@@ -39,7 +46,10 @@ scheduleSchema = new mongoose.Schema({
     default: false
   }
 
-});
+}, { emitIndexErrors: true });
+
+scheduleSchema.index({ app_id: 1 , name:1 } , { unique: true });
+
 
 var Schedule = mongoose.model('schedule' , scheduleSchema);
 
