@@ -6,24 +6,16 @@ jobs = function(){
   // create a schedule
 
   function checkIfJson(req){
-    // check for request body type
-    if(!req.is('application/json') ){
-
-      var err = new Error('please send json type request');
-      return res.send(400, err.message);
-    }
-
+    return new Promise(function(resolve, reject) {
+      if(!req.is('application/json') ){
+        reject('please send json type request');
+      }else{
+        resolve("checked");
+      }
+    });
   }
 
-
-  function createSchedule(req , res ,next){
-    var appID = req.body.appID,
-        name = req.body.name,
-        time = new Date(req.body.scheduleTime),
-        pushData = req.body.data;
-
-        // check for request body type
-    checkIfJson(req);
+  function saveScheduleInDB() {
 
     //create the schedule from the model
     oneSchedule = new Schedule({
@@ -33,23 +25,28 @@ jobs = function(){
       pushData: {msg: pushData.msg}
     });
 
-    oneSchedule.save().then((result)=>{
+    return oneSchedule.save().then((result)=>{
 
-        res.send(result);
-        next();
+      return Promise.resolve(result);
 
-    }).catch((e)=>{
+    });
+  }
 
-      if (e.name === 'MongoError' && e.code === 11000) {
-        return res.send(400 , 'There was a duplicate key error');
 
-      }
-      else if (e.name === "ValidationError") {
-        return res.send(400 ,'Invalid Json');
-      }
+  function createSchedule(req , res ,next){
+     appID = req.body.appID,
+        name = req.body.name,
+        time = new Date(req.body.scheduleTime),
+        pushData = req.body.data;
+
+        // check for request body type
+    return checkIfJson(req)
+    .then(saveScheduleInDB)
+
+    .catch((e)=>{
+
       //console.log(e.name);
-      return res.send(e);
-
+      return Promise.reject(e);
 
     });
 
@@ -178,7 +175,9 @@ jobs = function(){
     listAllSchedules: listAllSchedules,
     deleteSchedule: deleteSchedule,
     updateScheduleById: updateScheduleById,
-    listScheduleById: listScheduleById
+    listScheduleById: listScheduleById,
+    checkIfJson: checkIfJson,
+    saveScheduleInDB: saveScheduleInDB
 
   }
 };
