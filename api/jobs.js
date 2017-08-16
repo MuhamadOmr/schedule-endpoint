@@ -56,7 +56,7 @@ jobs = function() {
     Schedule.find({}).then((results) => {
 
       if (results.length === 0) {
-        return res.send(404, 'couldn\'t find any schedule');
+        return res.send(404, 'couldn\'t find any schedules');
       }
 
       res.send(results);
@@ -74,14 +74,14 @@ jobs = function() {
 
     var id = req.params.id;
 
-    checkIfJson(req).then(() => {
+    return checkIfJson(req).then(() => {
 
       return Schedule.findById(id);
 
     }).then((result) => {
 
       if (!result) {
-        return res.send(400, 'couldn\'t find a schedule');
+        return res.send(404, 'couldn\'t find a schedule');
       }
 
       res.send(result);
@@ -103,7 +103,7 @@ jobs = function() {
 
     var id = req.params.id;
 
-    checkIfJson(req).then(() => {
+    return checkIfJson(req).then(() => {
 
       // remove from the database then return the deleted record
       return Schedule.findByIdAndRemove(id);
@@ -131,7 +131,7 @@ jobs = function() {
 
     var id = req.params.id,
         data = req.body;
-    checkIfJson(req).then(() => {
+     checkIfJson(req).then(() => {
 
       // update the db then check for the sent property
       // if changed to TRUE
@@ -141,7 +141,7 @@ jobs = function() {
 
       //  console.log(record);
       if (!record) {
-        return res.send(400, 'couldn\'t find a schedule');
+        return res.send(404, 'couldn\'t find a schedule');
       }
 
       if (record.sent) {
