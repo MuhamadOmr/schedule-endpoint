@@ -110,11 +110,9 @@ jobs = function(){
 
     var id = req.params.id;
 
-    checkIfJson(req).then(()=>{
 
     // remove from the database then return the deleted record
-    return Schedule.findByIdAndRemove(id);
-    })
+    return Schedule.findByIdAndRemove(id)
     .then((result)=>{
 
       if(result === null){
@@ -130,7 +128,7 @@ jobs = function(){
         return res.send(400 , "invalid id")
       }
 
-      return res.send(404 , e);
+      return res.send(400 , e);
     })
 
   }
@@ -184,8 +182,7 @@ jobs = function(){
     deleteSchedule: deleteSchedule,
     updateScheduleById: updateScheduleById,
     listScheduleById: listScheduleById,
-    checkIfJson: checkIfJson,
-    saveScheduleInDB: saveScheduleInDB
+    checkIfJson: checkIfJson
 
   }
 };

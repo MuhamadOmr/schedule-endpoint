@@ -1,8 +1,6 @@
 var env = process.env.NODE_ENV || 'development';
 
 
-  process.env.MONGODB_URI = "mongodb://localhost:27017/schedule"
-
 if (env === 'development') {
 
   process.env.MONGODB_URI = "mongodb://localhost:27017/schedule"

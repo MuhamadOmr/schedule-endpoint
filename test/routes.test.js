@@ -18,14 +18,14 @@ describe("/POST test the create method", ()=>{
   beforeEach((done)=>{
 
     //req = {body:{
-      req = {
-        appID: "kja3i92i",
-        name: "name of the schedule",
-        scheduleTime: "December 17, 2017 03:24:00",
-        data: {
-          msg: "hello there !"
-        }
-      };
+    req = {
+      appID: "kja3i92i",
+      name: "name of the schedule",
+      scheduleTime: "December 17, 2017 03:24:00",
+      data: {
+        msg: "hello there !"
+      }
+    };
 
     Schedule.remove({}).then(()=>{
       done();
@@ -49,7 +49,7 @@ describe("/POST test the create method", ()=>{
       done();
     });
 
-    });
+  });
 
   afterEach((done)=>{
     Schedule.remove({}).then(()=>{
@@ -113,7 +113,7 @@ describe("/GET get all schedules", ()=>{
       done();
     })
 
- });
+  });
 
 });
 
@@ -135,7 +135,9 @@ describe("/DEl delete all the records", ()=>{
       }
     };
 
-    Schedule.create(req1).then(()=>{
+    Schedule.remove({}).then(()=>{
+      return Schedule.create(req1);
+    }).then(()=>{
       done();
 
     }).catch((e) => done(e));
@@ -165,12 +167,6 @@ describe("/DEl delete all the records", ()=>{
 
   });
 
-  afterEach((done)=>{
-    Schedule.remove({}).then(()=>{
-      done();
-    })
-
-  });
 
 });
 
@@ -193,7 +189,7 @@ describe("/Patch update the record", ()=>{
     };
 
     Schedule.remove({}).then(()=>{
-     return Schedule.create(req1);
+      return Schedule.create(req1);
     }).then(()=>{
       done();
 
@@ -203,7 +199,7 @@ describe("/Patch update the record", ()=>{
   });
 
 
-  it("should delete the passed record from db",(done)=>{
+  it("should update the passed record in db",(done)=>{
     id = req1._id.toString();
 
     chai.request("http://localhost:8088/")
