@@ -1,182 +1,170 @@
-var Schedule = require("../DB/schema").Schedule;
+var Schedule = require('../DB/schema').Schedule;
 
 //the module pattern
-jobs = function(){
+jobs = function() {
 
-
-  function checkIfJson(req){
+  function checkIfJson(req) {
     return new Promise(function(resolve, reject) {
-      if(!req.is('application/json') ){
+      if (!req.is('application/json')) {
         reject('please send json type request');
-      }else{
-        resolve("checked");
+      } else {
+        resolve('checked');
       }
     });
   }
 
   // create a schedule
 
-  function createSchedule(req , res ,next){
-     appID = req.body.appID,
+  function createSchedule(req, res, next) {
+    appID = req.body.appID,
         name = req.body.name,
         time = new Date(req.body.scheduleTime),
         pushData = req.body.data;
 
-        // check for request body type
-    return checkIfJson(req)
-    .then(()=>{
+    // check for request body type
+    return checkIfJson(req).then(() => {
       oneSchedule = new Schedule({
-        app_id: appID ,
+        app_id: appID,
         name: name,
         schedule: {time: time},
-        pushData: {msg: pushData.msg}
+        pushData: {msg: pushData.msg},
       });
 
       return oneSchedule.save();
 
-    }).then((result)=>{
+    }).then((result) => {
 
-        return res.send(result);
+      return res.send(result);
 
-      })
-    .catch((e)=>{
+    }).catch((e) => {
 
       if (e.name === 'MongoError' && e.code === 11000) {
-            return res.send(400,'There was a duplicate key error');
+        return res.send(400, 'There was a duplicate key error');
 
-          }
-          else if (e.name === "ValidationError") {
-            return res.send(400,'Invalid Json');
-          }
-          res.send(400 , e);
+      }
+      else if (e.name === 'ValidationError') {
+        return res.send(400, 'Invalid Json');
+      }
+      res.send(400, e);
 
     });
 
   }
 
-  function listAllSchedules(req , res ,next){
+  function listAllSchedules(req, res, next) {
 
-    Schedule.find({}).then((results)=>{
+    Schedule.find({}).then((results) => {
 
-      if(results.length === 0){
-        return res.send(404 , "couldn't find any schedule");
+      if (results.length === 0) {
+        return res.send(404, 'couldn\'t find any schedule');
       }
 
       res.send(results);
       next();
 
-    }).catch((e)=>{
+    }).catch((e) => {
 
       return res.send(e);
 
-    })
+    });
 
   }
 
-  function listScheduleById(req , res ,next){
+  function listScheduleById(req, res, next) {
 
     var id = req.params.id;
 
-    checkIfJson(req).then(()=>{
+    checkIfJson(req).then(() => {
 
-    return Schedule.findById(id);
+      return Schedule.findById(id);
 
-    })
-    .then((result)=>{
+    }).then((result) => {
 
-      if(!result){
-        return res.send(400 , "couldn't find a schedule");
+      if (!result) {
+        return res.send(400, 'couldn\'t find a schedule');
       }
-
 
       res.send(result);
       next();
 
+    }).catch((e) => {
 
-    }).catch((e)=>{
+      if (e.name === 'CastError') {
 
-      if(e.name ==="CastError"){
-
-        return res.send(400 , "invalid id")
+        return res.send(400, 'invalid id');
       }
       return res.send(e);
 
-
-    })
+    });
 
   }
 
-  function deleteSchedule(req , res ,next){
+  function deleteSchedule(req, res, next) {
 
     var id = req.params.id;
 
-    checkIfJson(req).then(()=>{
+    checkIfJson(req).then(() => {
 
-    // remove from the database then return the deleted record
-    return Schedule.findByIdAndRemove(id);
-    })
-    .then((result)=>{
+      // remove from the database then return the deleted record
+      return Schedule.findByIdAndRemove(id);
+    }).then((result) => {
 
-      if(result === null){
-        return res.send(404 , "not found")
+      if (result === null) {
+        return res.send(404, 'not found');
       }
 
-     return res.send(result);
+      return res.send(result);
 
-    }).catch((e)=>{
+    }).catch((e) => {
 
-      if(e.name ==="CastError"){
+      if (e.name === 'CastError') {
 
-        return res.send(400 , "invalid id")
+        return res.send(400, 'invalid id');
       }
 
-      return res.send(404 , e);
-    })
+      return res.send(404, e);
+    });
 
   }
 
-  function updateScheduleById(req , res ,next){
+  function updateScheduleById(req, res, next) {
 
     var id = req.params.id,
         data = req.body;
-    checkIfJson(req).then(()=>{
+    checkIfJson(req).then(() => {
 
-    // update the db then check for the sent property
-    // if changed to TRUE
+      // update the db then check for the sent property
+      // if changed to TRUE
       // if True -- delete the record
-    return Schedule.findByIdAndUpdate(id, data,{new: true});
-    })
-    .then((record)=>{
+      return Schedule.findByIdAndUpdate(id, data, {new: true});
+    }).then((record) => {
 
-    //  console.log(record);
-      if(!record){
-        return res.send(400 , "couldn't find a schedule");
+      //  console.log(record);
+      if (!record) {
+        return res.send(400, 'couldn\'t find a schedule');
       }
 
+      if (record.sent) {
 
-      if(record.sent){
-
-        deleteSchedule(req , res);
+        deleteSchedule(req, res);
       }
-      else{
+      else {
         res.send(record);
         next();
       }
 
-    })
-    .catch((e)=>{
+    }).catch((e) => {
       console.log(e);
 
-      if(e.name ==="CastError"){
+      if (e.name === 'CastError') {
 
-        return res.send(400 , "invalid id")
+        return res.send(400, 'invalid id');
       }
       res.send(e);
       next();
-    })
+    });
 
   }
-
 
   return {
     createSchedule: createSchedule,
@@ -185,9 +173,9 @@ jobs = function(){
     updateScheduleById: updateScheduleById,
     listScheduleById: listScheduleById,
     checkIfJson: checkIfJson,
-    saveScheduleInDB: saveScheduleInDB
 
-  }
+
+  };
 };
 
 module.exports = jobs();
