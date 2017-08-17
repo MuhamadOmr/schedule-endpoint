@@ -2,19 +2,19 @@ schedule a Notification
 
 POST /schedule
 
-	JSON Parameters:
+JSON Parameters:
 
 		appID 	  	 => appication id
 		name 		     => string
 		scheduleTime => time the notification will be sent , in UTC.
 		data 	    	 => push object you want to send
 
-	Response Codes:
+Response Codes:
 
 		200 => The response body will contain the schedule that was created.
 		400 => The request body was invalid, most likely due to malformed JSON Or duplicate error.
 
-	Example Request:
+Example Request:
 
 		POST /schedule
 		Content-Type: application/json;
@@ -29,7 +29,7 @@ POST /schedule
 		}
 
 
-	Example Response:
+Example Response:
 		200 OK
 		Content-Type: application/json;
 
@@ -52,6 +52,7 @@ List all schedules
 GET /schedule
 
 Example Request:
+
 	GET /schedule
 	Content-Type: application/json;
 
@@ -94,6 +95,8 @@ Example Response:
 		    }
 		  }
 		]
+		
+		
 List a Specific schedule
 
 GET /schedule/:id
@@ -133,6 +136,7 @@ Example Response:
 		      "time": "2017-12-17T01:24:00.000Z"
 		    }
 		  }
+		  
 Update Schedule
 
 PATCH /schedule/:id
@@ -164,7 +168,8 @@ Example Request:
 		}
 
 
-	Example Response:
+Example Response:
+
 		200 OK
 		Content-Type: application/json;
 
@@ -182,6 +187,8 @@ Example Request:
 		    "time": "2017-12-17T01:24:00.000Z"
 		  }
 		}
+
+
 Delete Schedule
 
 DELETE /schedule/:id
@@ -204,7 +211,8 @@ Example Request:
 		Content-Type: application/json;
 
 
-	Example Response:
+Example Response:
+
 		200 OK
 		Content-Type: application/json;
 
