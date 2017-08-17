@@ -17,7 +17,7 @@ jobs = function(){
   // create a schedule
 
   function createSchedule(req , res ,next){
-     appID = req.body.appID,
+     var appID = req.body.appID,
         name = req.body.name,
         time = new Date(req.body.scheduleTime),
         pushData = req.body.data;
@@ -89,8 +89,8 @@ jobs = function(){
       }
 
 
-      res.send(result);
-      next();
+      return res.send(result);
+
 
 
     }).catch((e)=>{
@@ -157,8 +157,8 @@ jobs = function(){
         deleteSchedule(req , res);
       }
       else{
-        res.send(record);
-        next();
+        return res.send(record);
+
       }
 
     })
