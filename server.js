@@ -1,11 +1,17 @@
 var restify = require('restify'),
     jobs = require('./api/jobs'),
-    connection = require("./db");
+    connection = require("./db"),
+    aggregator = require("./api/aggregator");
 
 
 
 // create Server
 var server = restify.createServer();
+
+setInterval(function(){
+  aggregator.checkSchedule();
+
+}, 2 * 1000);
 
 server.use(restify.plugins.bodyParser());
 
